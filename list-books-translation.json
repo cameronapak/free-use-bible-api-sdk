@@ -1,0 +1,83 @@
+{
+  "/api/{translation}/books": {
+    "get": {
+      "summary": "List Books in a Translation",
+      "description": "Gets the list of books that are available for the given translation.",
+      "parameters": [
+        {
+          "name": "translation",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the translation (e.g. BSB)",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of books for the translation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "translation": {
+                    "$ref": "./schemas.json#/components/schemas/Translation"
+                  },
+                  "books": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "./schemas.json#/components/schemas/TranslationBook"
+                    }
+                  }
+                },
+                "required": ["translation", "books"]
+              },
+              "examples": {
+                "example": {
+                  "summary": "Example response for BSB translation",
+                  "value": {
+                    "translation": {
+                      "id": "BSB",
+                      "name": "Berean Standard Bible",
+                      "website": "https://berean.bible/",
+                      "licenseUrl": "https://berean.bible/",
+                      "shortName": "BSB",
+                      "englishName": "Berean Standard Bible",
+                      "language": "eng",
+                      "textDirection": "ltr",
+                      "availableFormats": [
+                        "json"
+                      ],
+                      "listOfBooksApiLink": "/api/BSB/books.json",
+                      "numberOfBooks": 66,
+                      "totalNumberOfChapters": 1189,
+                      "totalNumberOfVerses": 31086,
+                      "languageName": "English",
+                      "languageEnglishName": "English"
+                    },
+                    "books": [
+                      {
+                        "id": "GEN",
+                        "translationId": "BSB",
+                        "name": "Genesis",
+                        "commonName": "Genesis",
+                        "title": "Genesis",
+                        "order": 1,
+                        "numberOfChapters": 50,
+                        "firstChapterApiLink": "/api/BSB/GEN/1.json",
+                        "lastChapterApiLink": "/api/BSB/GEN/50.json",
+                        "totalNumberOfVerses": 1533
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

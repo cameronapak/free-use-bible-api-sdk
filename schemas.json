@@ -1,0 +1,339 @@
+{
+  "components": {
+    "schemas": {
+      "Translation": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "englishName": { "type": "string" },
+          "website": { "type": "string" },
+          "licenseUrl": { "type": "string" },
+          "shortName": { "type": "string" },
+          "language": { "type": "string" },
+          "languageName": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "languageEnglishName": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "textDirection": { "type": "string", "enum": ["ltr", "rtl"] },
+          "availableFormats": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["json", "usfm"] }
+          },
+          "listOfBooksApiLink": { "type": "string" },
+          "numberOfBooks": { "type": "integer" },
+          "totalNumberOfChapters": { "type": "integer" },
+          "totalNumberOfVerses": { "type": "integer" },
+          "numberOfApocryphalBooks": { "oneOf": [ { "type": "integer" }, { "type": "null" } ] },
+          "totalNumberOfApocryphalChapters": { "oneOf": [ { "type": "integer" }, { "type": "null" } ] },
+          "totalNumberOfApocryphalVerses": { "oneOf": [ { "type": "integer" }, { "type": "null" } ] }
+        },
+        "required": ["id", "name", "englishName", "website", "licenseUrl", "shortName", "language", "textDirection", "availableFormats", "listOfBooksApiLink", "numberOfBooks", "totalNumberOfChapters", "totalNumberOfVerses"]
+      },
+      "TranslationBook": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "commonName": { "type": "string" },
+          "title": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "order": { "type": "integer" },
+          "numberOfChapters": { "type": "integer" },
+          "firstChapterApiLink": { "type": "string" },
+          "lastChapterApiLink": { "type": "string" },
+          "totalNumberOfVerses": { "type": "integer" },
+          "isApocryphal": { "oneOf": [ { "type": "boolean" }, { "type": "null" } ] }
+        },
+        "required": ["id", "name", "commonName", "order", "numberOfChapters", "firstChapterApiLink", "lastChapterApiLink", "totalNumberOfVerses"]
+      },
+      "ChapterHeading": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["heading"] },
+          "content": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["type", "content"]
+      },
+      "ChapterLineBreak": {
+        "type": "object",
+        "properties": { "type": { "type": "string", "enum": ["line_break"] } },
+        "required": ["type"]
+      },
+      "ChapterHebrewSubtitle": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["hebrew_subtitle"] },
+          "content": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                { "type": "string" },
+                { "$ref": "#/components/schemas/FormattedText" },
+                { "$ref": "#/components/schemas/VerseFootnoteReference" }
+              ]
+            }
+          }
+        },
+        "required": ["type", "content"]
+      },
+      "ChapterVerse": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["verse"] },
+          "number": { "type": "integer" },
+          "content": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                { "type": "string" },
+                { "$ref": "#/components/schemas/FormattedText" },
+                { "$ref": "#/components/schemas/InlineHeading" },
+                { "$ref": "#/components/schemas/InlineLineBreak" },
+                { "$ref": "#/components/schemas/VerseFootnoteReference" }
+              ]
+            }
+          }
+        },
+        "required": ["type", "number", "content"]
+      },
+      "ChapterContent": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/ChapterHeading" },
+          { "$ref": "#/components/schemas/ChapterLineBreak" },
+          { "$ref": "#/components/schemas/ChapterHebrewSubtitle" },
+          { "$ref": "#/components/schemas/ChapterVerse" }
+        ]
+      },
+      "FormattedText": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string" },
+          "poem": { "oneOf": [ { "type": "integer" }, { "type": "null" } ] },
+          "wordsOfJesus": { "oneOf": [ { "type": "boolean" }, { "type": "null" } ] }
+        },
+        "required": ["text"]
+      },
+      "InlineHeading": {
+        "type": "object",
+        "properties": { "heading": { "type": "string" } },
+        "required": ["heading"]
+      },
+      "InlineLineBreak": {
+        "type": "object",
+        "properties": { "lineBreak": { "type": "boolean" } },
+        "required": ["lineBreak"]
+      },
+      "VerseFootnoteReference": {
+        "type": "object",
+        "properties": { "noteId": { "type": "integer" } },
+        "required": ["noteId"]
+      },
+      "ChapterFootnote": {
+        "type": "object",
+        "properties": {
+          "noteId": { "type": "integer" },
+          "text": { "type": "string" },
+          "reference": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "chapter": { "type": "integer" },
+                  "verse": { "type": "integer" }
+                }
+              },
+              { "type": "null" }
+            ]
+          },
+          "caller": { "oneOf": [{ "type": "string" }, { "type": "null" }, { "const": "+" }] }
+        },
+        "required": ["noteId", "text", "caller"]
+      },
+      "ChapterData": {
+        "type": "object",
+        "properties": {
+          "number": { "type": "integer" },
+          "content": { "$ref": "#/components/schemas/ChapterContent" },
+          "footnotes": { "$ref": "#/components/schemas/ChapterFootnote" }
+        },
+        "required": ["number", "content", "footnotes"]
+      },
+      "AudioLinks": {
+        "type": "object",
+        "additionalProperties": { "type": "string" }
+      },
+      "Commentary": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "website": { "type": "string" },
+          "licenseUrl": { "type": "string" },
+          "englishName": { "type": "string" },
+          "language": { "type": "string" },
+          "textDirection": { "type": "string", "enum": ["ltr", "rtl"] },
+          "listOfBooksApiLink": { "type": "string" },
+          "availableFormats": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["json", "usfm"] }
+          },
+          "numberOfBooks": { "type": "integer" },
+          "totalNumberOfChapters": { "type": "integer" },
+          "totalNumberOfVerses": { "type": "integer" },
+          "languageName": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "languageEnglishName": { "oneOf": [ { "type": "string" }, { "type": "null" } ] }
+        },
+        "required": ["id", "name", "website", "licenseUrl", "englishName", "language", "textDirection", "listOfBooksApiLink", "availableFormats", "numberOfBooks", "totalNumberOfChapters", "totalNumberOfVerses"]
+      },
+      "CommentaryBook": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "commonName": { "type": "string" },
+          "introduction": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "order": { "type": "integer" },
+          "firstChapterApiLink": { "type": "string" },
+          "lastChapterApiLink": { "type": "string" },
+          "numberOfChapters": { "type": "integer" },
+          "totalNumberOfVerses": { "type": "integer" }
+        },
+        "required": ["id", "name", "commonName", "order", "firstChapterApiLink", "lastChapterApiLink", "numberOfChapters", "totalNumberOfVerses"]
+      },
+      "CommentaryChapterData": {
+        "type": "object",
+        "properties": {
+          "number": { "type": "integer" },
+          "introduction": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "content": { "$ref": "#/components/schemas/ChapterVerse" }
+        },
+        "required": ["number", "content"]
+      },
+      "VerseRef": {
+        "type": "object",
+        "properties": {
+          "book": { "type": "string" },
+          "chapter": { "type": "integer" },
+          "verse": { "type": "integer" },
+          "endChapter": { "oneOf": [ { "type": "integer" }, { "type": "null" } ] },
+          "endVerse": { "oneOf": [ { "type": "integer" }, { "type": "null" } ] }
+        },
+        "required": ["book", "chapter", "verse"]
+      },
+      "CommentaryProfile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "subject": { "type": "string" },
+          "reference": { "oneOf": [ { "$ref": "#/components/schemas/VerseRef" }, { "type": "null" } ] },
+          "thisProfileLink": { "type": "string" },
+          "referenceChapterLink": { "oneOf": [ { "type": "string" }, { "type": "null" } ] }
+        },
+        "required": ["id", "subject", "thisProfileLink"]
+      },
+      "AvailableTranslations": {
+        "type": "object",
+        "properties": {
+          "translations": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Translation" }
+          }
+        },
+        "required": ["translations"]
+      },
+      "TranslationBooks": {
+        "type": "object",
+        "properties": {
+          "translation": { "$ref": "#/components/schemas/Translation" },
+          "books": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TranslationBook" }
+          }
+        },
+        "required": ["translation", "books"]
+      },
+      "TranslationBookChapter": {
+        "type": "object",
+        "properties": {
+          "translation": { "$ref": "#/components/schemas/Translation" },
+          "book": { "$ref": "#/components/schemas/TranslationBook" },
+          "thisChapterApiLink": { "type": "string" },
+          "thisChapterAudioLinks": { "$ref": "#/components/schemas/AudioLinks" },
+          "nextChapterApiLink": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "nextChapterAudioLinks": { "oneOf": [ { "$ref": "#/components/schemas/AudioLinks" }, { "type": "null" } ] },
+          "previousChapterApiLink": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "previousChapterAudioLinks": { "oneOf": [ { "$ref": "#/components/schemas/AudioLinks" }, { "type": "null" } ] },
+          "numberOfVerses": { "type": "integer" },
+          "chapter": { "$ref": "#/components/schemas/ChapterData" }
+        },
+        "required": ["translation", "book", "thisChapterApiLink", "thisChapterAudioLinks", "numberOfVerses", "chapter"]
+      },
+      "AvailableCommentaries": {
+        "type": "object",
+        "properties": {
+          "commentaries": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Commentary" }
+          }
+        },
+        "required": ["commentaries"]
+      },
+      "CommentaryBooks": {
+        "type": "object",
+        "properties": {
+          "commentary": { "$ref": "#/components/schemas/Commentary" },
+          "books": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CommentaryBook" }
+          }
+        },
+        "required": ["commentary", "books"]
+      },
+      "CommentaryBookChapter": {
+        "type": "object",
+        "properties": {
+          "commentary": { "$ref": "#/components/schemas/Commentary" },
+          "book": { "$ref": "#/components/schemas/CommentaryBook" },
+          "thisChapterLink": { "type": "string" },
+          "nextChapterApiLink": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "previousChapterApiLink": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "numberOfVerses": { "type": "integer" },
+          "chapter": { "$ref": "#/components/schemas/CommentaryChapterData" }
+        },
+        "required": ["commentary", "book", "thisChapterLink", "numberOfVerses", "chapter"]
+      },
+      "CommentaryProfiles": {
+        "type": "object",
+        "properties": {
+          "commentary": { "$ref": "#/components/schemas/Commentary" },
+          "profiles": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CommentaryProfile" }
+          }
+        },
+        "required": ["commentary", "profiles"]
+      },
+      "CommentaryProfileContent": {
+        "type": "object",
+        "properties": {
+          "commentary": { "$ref": "#/components/schemas/Commentary" },
+          "profile": { "$ref": "#/components/schemas/CommentaryProfile" },
+          "content": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["commentary", "profile", "content"]
+      }
+    }
+  },
+  "paths": {
+    "/api/available_translations": {
+      "$ref": "available-translations.json#/api/available_translations"
+    },
+    "/api/{translation}/books": {
+      "$ref": "list-books-translation.json#/api/{translation}/books"
+    },
+    "/api/{translation}/{book}/{chapter}": {
+      "$ref": "get-chapter-translation.json#/api/{translation}/{book}/{chapter}"
+    }
+  }
+}
