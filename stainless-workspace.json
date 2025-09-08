@@ -1,5 +1,10 @@
 {
   "project": "free-use-bible-api",
   "openapi_spec": "./openapi.json",
-  "stainless_config": "./stainless.yml"
+  "stainless_config": "./stainless.yml",
+  "targets": {
+    "typescript": {
+      "output_path": "./free-use-bible-api-typescript"
+    }
+  }
 }
