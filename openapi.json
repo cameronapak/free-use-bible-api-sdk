@@ -16,7 +16,7 @@
     }
   ],
   "paths": {
-    "/api/available_translations": {
+    "/api/available_translation.json": {
       "get": {
         "operationId": "getAvailableTranslations",
         "summary": "Available Translations",
@@ -76,7 +76,7 @@
         }
       }
     },
-    "/api/{translation}/books": {
+    "/api/{translation}/books.json": {
       "get": {
         "operationId": "getBooksForTranslation",
         "summary": "List Books in a Translation",
@@ -159,7 +159,7 @@
         }
       }
     },
-    "/api/{translation}/{book}/{chapter}": {
+    "/api/{translation}/{book}/{chapter}.json": {
       "get": {
         "operationId": "getChapterFromTranslation",
         "summary": "Get a Chapter from a Translation",
