@@ -1,0 +1,5 @@
+{
+  "project": "free-use-bible-api",
+  "openapi_spec": "./openapi.json",
+  "stainless_config": "./stainless.yml"
+}
