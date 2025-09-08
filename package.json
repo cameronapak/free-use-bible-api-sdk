@@ -1,0 +1,19 @@
+{
+  "name": "openapi-bible-api-stainless",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "redocly lint openapi.json",
+    "build-docs": "redocly build-docs openapi.json",
+    "pre:open-docs": "build-docs",
+    "open-docs": "open redoc-static.html"
+  },
+  "devDependencies": {
+    "@redocly/cli": "^2.0.8",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
