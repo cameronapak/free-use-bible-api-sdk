@@ -7,11 +7,13 @@
     "lint": "redocly lint openapi.json",
     "build-docs": "redocly build-docs openapi.json",
     "pre:open-docs": "build-docs",
-    "open-docs": "open redoc-static.html"
+    "open-docs": "open redoc-static.html",
+    "gen-sdk": "apigen-ts ./openapi.json ./api-client.ts"
   },
   "devDependencies": {
     "@redocly/cli": "^2.0.8",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "apigen-ts": "^1.2.1"
   },
   "peerDependencies": {
     "typescript": "^5"
