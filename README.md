@@ -1,20 +1,40 @@
 
 # OpenAPI Specification for Free Use Bible API
 
-This project contains a modular OpenAPI 3.1.0 specification for the Free Use Bible API (https://bible.helloao.org/docs/reference/).
+This project contains an OpenAPI 3.1.0 specification for the Free Use Bible API (https://bible.helloao.org/docs/reference/), designed to generate a TypeScript SDK using openapi-zod-client. The generated SDK works very well for interacting with the API.
 
-## Files
+## Generating the SDK
 
-- **openapi.json**: Main specification file with info, servers, and paths referencing individual endpoint files and schemas.
+Run the following command to generate the SDK:
 
-- **schemas.json**: Shared JSON Schema definitions for all API objects (e.g., Translation, CommentaryBook, ChapterData).
+```bash
+bun run gen-sdk-v2
+```
 
-- **available-translations.json**: Defines the GET /api/available_translations endpoint with GET operation, no parameters, response schema, and example.
+This generates `api-client-v2.ts` with full TypeScript types and Zod validation.
 
-- **list-books-translation.json**: Defines the GET /api/{translation}/books endpoint with path parameter, response schema, and example.
+## Usage Example
 
-- **get-chapter-translation.json**: Defines the GET /api/{translation}/{book}/{chapter} endpoint with path parameters, response schema, and example.
+```typescript
+import { createApiClient } from "./api-client-v2";
 
+const client = createApiClient("https://bible.helloao.org");
+
+// Get available translations
+const translations = await client.getAvailableTranslations();
+console.log(translations.translations[0]);
+
+// Get books for a translation
+const books = await client.getBooksForTranslation({ params: { translation: "BSB" } });
+console.log(books.books);
+
+// Get a chapter
+const chapter = await client.getChapterFromTranslation({
+  params: { translation: "BSB", book: "Romans", chapter: 8 }
+});
+console.log(chapter.chapter.content);
+```
 
 ## For contributors
+
 See [Agents.md](Agents.md) for guidance when working with this repository.
