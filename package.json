@@ -8,12 +8,14 @@
     "build-docs": "redocly build-docs openapi.json",
     "pre:open-docs": "build-docs",
     "open-docs": "open redoc-static.html",
-    "gen-sdk": "apigen-ts ./openapi.json ./api-client.ts"
+    "gen-sdk": "apigen-ts ./openapi.json ./api-client.ts",
+    "gen-sdk-v2": "openapi-zod-client \"./openapi.json\" -o \"./api-client-v2.ts\" --export-schemas=true --export-types=true --base-url=https://bible.helloao.org --strict-objects"
   },
   "devDependencies": {
     "@redocly/cli": "^2.0.8",
     "@types/bun": "latest",
-    "apigen-ts": "^1.2.1"
+    "apigen-ts": "^1.2.1",
+    "openapi-zod-client": "^1.18.3"
   },
   "peerDependencies": {
     "typescript": "^5"
