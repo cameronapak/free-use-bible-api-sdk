@@ -151,8 +151,14 @@
         "type": "object",
         "properties": {
           "number": { "type": "integer" },
-          "content": { "$ref": "#/components/schemas/ChapterContent" },
-          "footnotes": { "$ref": "#/components/schemas/ChapterFootnote" }
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ChapterContent" }
+          },
+          "footnotes": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ChapterFootnote" }
+          }
         },
         "required": ["number", "content", "footnotes"]
       },

@@ -1,5 +1,6 @@
 {
   "openapi": "3.1.0",
+  "security": [],
   "info": {
     "title": "Bible API Spec",
     "version": "1.0.0",
@@ -17,6 +18,7 @@
   "paths": {
     "/api/available_translations": {
       "get": {
+        "operationId": "getAvailableTranslations",
         "summary": "Available Translations",
         "description": "Gets the list of available translations in the API.",
         "responses": {
@@ -57,12 +59,26 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/{translation}/books": {
       "get": {
+        "operationId": "getBooksForTranslation",
         "summary": "List Books in a Translation",
         "description": "Gets the list of books that are available for the given translation.",
         "parameters": [
@@ -110,7 +126,6 @@
                       "books": [
                         {
                           "id": "GEN",
-                          "translationId": "BSB",
                           "name": "Genesis",
                           "commonName": "Genesis",
                           "title": "Genesis",
@@ -126,12 +141,26 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/{translation}/{book}/{chapter}": {
       "get": {
+        "operationId": "getChapterFromTranslation",
         "summary": "Get a Chapter from a Translation",
         "description": "Gets the content of a single chapter for a given book and translation.",
         "parameters": [
@@ -194,7 +223,6 @@
                       },
                       "book": {
                         "id": "GEN",
-                        "translationId": "BSB",
                         "name": "Genesis",
                         "commonName": "Genesis",
                         "title": "Genesis",
@@ -329,6 +357,19 @@
                         ]
                       }
                     }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
                   }
                 }
               }
