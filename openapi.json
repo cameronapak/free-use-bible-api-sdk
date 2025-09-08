@@ -4,7 +4,7 @@
   "info": {
     "title": "Bible API Spec",
     "version": "1.0.0",
-    "description": "OpenAPI specification for the Free Use Bible API at https://bible.helloao.org providing access to Bible translations, books, chapters, commentaries, and profiles.",
+    "description": "OpenAPI specification for the Free Use Bible API at https://bible.helloao.org providing access to Bible translations, books, and chapters.",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
@@ -126,6 +126,7 @@
                       "books": [
                         {
                           "id": "GEN",
+                          "translationId": "BSB",
                           "name": "Genesis",
                           "commonName": "Genesis",
                           "title": "Genesis",
@@ -223,6 +224,7 @@
                       },
                       "book": {
                         "id": "GEN",
+                        "translationId": "BSB",
                         "name": "Genesis",
                         "commonName": "Genesis",
                         "title": "Genesis",
