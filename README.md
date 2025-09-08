@@ -14,3 +14,7 @@ This project contains a modular OpenAPI 3.1.0 specification for the Free Use Bib
 - **list-books-translation.json**: Defines the GET /api/{translation}/books endpoint with path parameter, response schema, and example.
 
 - **get-chapter-translation.json**: Defines the GET /api/{translation}/{book}/{chapter} endpoint with path parameters, response schema, and example.
+
+
+## For contributors
+See [Agents.md](Agents.md) for guidance when working with this repository.
