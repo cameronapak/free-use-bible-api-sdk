@@ -91,7 +91,7 @@ type TranslationBook = {
 type TranslationBookChapter = {
   translation: Translation
   book: TranslationBook
-  thisChapterApiLink: string
+  thisChapterLink: string
   thisChapterAudioLinks: AudioLinks
   nextChapterApiLink?: (string | null) | undefined
   nextChapterAudioLinks?: (AudioLinks | null) | undefined
@@ -197,7 +197,7 @@ const TranslationBookChapter: z.ZodType<TranslationBookChapter> = z
   .object({
     translation: Translation,
     book: TranslationBook,
-    thisChapterApiLink: z.string(),
+    thisChapterLink: z.string(),
     thisChapterAudioLinks: AudioLinks,
     nextChapterApiLink: z.union([z.string(), z.null()]).optional(),
     nextChapterAudioLinks: z.union([AudioLinks, z.null()]).optional(),

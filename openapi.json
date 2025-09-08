@@ -234,7 +234,7 @@
                         "lastChapterApiLink": "/api/BSB/GEN/50.json",
                         "totalNumberOfVerses": 1533
                       },
-                      "thisChapterApiLink": "/api/BSB/GEN/1.json",
+                      "thisChapterLink": "/api/BSB/GEN/1.json",
                       "thisChapterAudioLinks": {
                         "gilbert": "https://openbible.com/audio/gilbert/BSB_01_Gen_001_G.mp3",
                         "hays": "https://openbible.com/audio/hays/BSB_01_Gen_001_H.mp3",
@@ -575,7 +575,7 @@
         "properties": {
           "translation": { "$ref": "#/components/schemas/Translation" },
           "book": { "$ref": "#/components/schemas/TranslationBook" },
-          "thisChapterApiLink": { "type": "string" },
+          "thisChapterLink": { "type": "string" },
           "thisChapterAudioLinks": { "$ref": "#/components/schemas/AudioLinks" },
           "nextChapterApiLink": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
           "nextChapterAudioLinks": { "oneOf": [ { "$ref": "#/components/schemas/AudioLinks" }, { "type": "null" } ] },
@@ -584,7 +584,7 @@
           "numberOfVerses": { "type": "integer" },
           "chapter": { "$ref": "#/components/schemas/ChapterData" }
         },
-        "required": ["translation", "book", "thisChapterApiLink", "thisChapterAudioLinks", "numberOfVerses", "chapter"]
+        "required": ["translation", "book", "thisChapterLink", "thisChapterAudioLinks", "numberOfVerses", "chapter"]
       }
     }
   }
