@@ -16,7 +16,7 @@
     }
   ],
   "paths": {
-    "/api/available_translation.json": {
+    "/api/available_translations.json": {
       "get": {
         "operationId": "getAvailableTranslations",
         "summary": "Available Translations",

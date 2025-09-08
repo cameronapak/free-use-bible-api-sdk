@@ -80,7 +80,7 @@ export class ApiClient {
 
   general = {
     getAvailableTranslations: () => {
-      return this.Fetch<AvailableTranslations>('get', '/api/available_translation.json', {})
+      return this.Fetch<AvailableTranslations>('get', '/api/available_translations.json', {})
     },
 
     getBooksForTranslation: (translation: string) => {
