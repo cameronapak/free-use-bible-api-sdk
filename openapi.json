@@ -635,6 +635,101 @@
           }
         }
       }
+    },
+    "/api/c/{commentary}/profiles.json": {
+      "get": {
+        "operationId": "getProfilesForCommentary",
+        "summary": "List Profiles in a Commentary",
+        "description": "Gets the list of profiles that are available for the given commentary. Profiles are overviews of people or people groups.",
+        "parameters": [
+          {
+            "name": "commentary",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the commentary (e.g. tyndale)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of profiles for the commentary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentaryProfiles"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Example response for tyndale commentary",
+                    "value": {
+                      "commentary": {
+                        "id": "tyndale",
+                        "name": "Tyndale Open Study Notes",
+                        "website": "https://tyndaleopenresources.com/",
+                        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+                        "shortName": "Tyndale",
+                        "englishName": "Tyndale Open Study Notes",
+                        "language": "eng",
+                        "textDirection": "ltr",
+                        "availableFormats": [
+                          "json"
+                        ],
+                        "listOfBooksApiLink": "/api/c/tyndale/books.json",
+                        "numberOfBooks": 69,
+                        "totalNumberOfChapters": 1243,
+                        "totalNumberOfVerses": 15757,
+                        "languageName": "English",
+                        "languageEnglishName": "English"
+                      },
+                      "profiles": [
+                        {
+                          "id": "aaron",
+                          "reference": {
+                            "book": "EXO",
+                            "chapter": 4,
+                            "verse": 14,
+                            "endVerse": 16
+                          },
+                          "subject": "Aaron",
+                          "thisProfileLink": "/api/c/tyndale/profiles/aaron.json",
+                          "referenceChapterLink": "/api/c/tyndale/EXO/4.json"
+                        },
+                        {
+                          "id": "abiathar",
+                          "reference": {
+                            "book": "1SA",
+                            "chapter": 22,
+                            "verse": 20,
+                            "endVerse": 23
+                          },
+                          "subject": "Abiathar",
+                          "thisProfileLink": "/api/c/tyndale/profiles/abiathar.json",
+                          "referenceChapterLink": "/api/c/tyndale/1SA/22.json"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -926,6 +1021,39 @@
           }
         },
         "required": ["number", "content"]
+      },
+      "CommentaryProfiles": {
+        "type": "object",
+        "properties": {
+          "commentary": { "$ref": "#/components/schemas/Commentary" },
+          "profiles": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CommentaryProfile" }
+          }
+        },
+        "required": ["commentary", "profiles"]
+      },
+      "CommentaryProfile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "subject": { "type": "string" },
+          "reference": { "oneOf": [ { "$ref": "#/components/schemas/VerseRef" }, { "type": "null" } ] },
+          "thisProfileLink": { "type": "string" },
+          "referenceChapterLink": { "oneOf": [ { "type": "string" }, { "type": "null" } ] }
+        },
+        "required": ["id", "subject", "thisProfileLink"]
+      },
+      "VerseRef": {
+        "type": "object",
+        "properties": {
+          "book": { "type": "string" },
+          "chapter": { "type": "integer" },
+          "verse": { "type": "integer" },
+          "endChapter": { "oneOf": [ { "type": "integer" }, { "type": "null" } ] },
+          "endVerse": { "oneOf": [ { "type": "integer" }, { "type": "null" } ] }
+        },
+        "required": ["book", "chapter", "verse"]
       }
     }
   }
