@@ -521,6 +521,120 @@
           }
         }
       }
+    },
+    "/api/c/{commentary}/{book}/{chapter}.json": {
+      "get": {
+        "operationId": "getChapterFromCommentary",
+        "summary": "Get a Chapter from a Commentary",
+        "description": "Gets the content of a single chapter for a given book and commentary.",
+        "parameters": [
+          {
+            "name": "commentary",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the commentary (e.g. adam-clarke)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "book",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the book (e.g. GEN for Genesis)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chapter",
+            "in": "path",
+            "required": true,
+            "description": "The numerical chapter (e.g. 1 for the first chapter)",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chapter content from the commentary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentaryBookChapter"
+                },
+                "examples": {
+                  "genesis1": {
+                    "summary": "Example: Genesis 1 from adam-clarke commentary",
+                    "value": {
+                      "commentary": {
+                        "id": "adam-clarke",
+                        "name": "Adam Clarke Bible Commentary",
+                        "website": "https://en.wikipedia.org/wiki/Adam_Clarke",
+                        "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+                        "shortName": "Adam Clarke",
+                        "englishName": "Adam Clarke Bible Commentary",
+                        "language": "eng",
+                        "textDirection": "ltr",
+                        "availableFormats": [
+                          "json"
+                        ],
+                        "listOfBooksApiLink": "/api/c/adam-clarke/books.json",
+                        "numberOfBooks": 57,
+                        "totalNumberOfChapters": 854,
+                        "totalNumberOfVerses": 13318,
+                        "languageName": "English",
+                        "languageEnglishName": "English"
+                      },
+                      "book": {
+                        "id": "GEN",
+                        "name": "Genesis",
+                        "commonName": "Genesis",
+                        "introduction": "Preface to the Book of Genesis...",
+                        "order": 1,
+                        "numberOfChapters": 50,
+                        "firstChapterApiLink": "/api/c/adam-clarke/GEN/1.json",
+                        "lastChapterApiLink": "/api/c/adam-clarke/GEN/50.json",
+                        "totalNumberOfVerses": 877
+                      },
+                      "thisChapterLink": "/api/c/adam-clarke/GEN/1.json",
+                      "nextChapterApiLink": "/api/c/adam-clarke/GEN/2.json",
+                      "previousChapterApiLink": null,
+                      "numberOfVerses": 1,
+                      "chapter": {
+                        "number": 1,
+                        "content": [
+                          {
+                            "type": "verse",
+                            "number": 1,
+                            "content": [
+                              "God in the beginning created the heavens and the earth..."
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -787,6 +901,31 @@
           "totalNumberOfVerses": { "type": "integer" }
         },
         "required": ["id", "name", "commonName", "order", "firstChapterApiLink", "lastChapterApiLink", "numberOfChapters", "totalNumberOfVerses"]
+      },
+      "CommentaryBookChapter": {
+        "type": "object",
+        "properties": {
+          "commentary": { "$ref": "#/components/schemas/Commentary" },
+          "book": { "$ref": "#/components/schemas/CommentaryBook" },
+          "thisChapterLink": { "type": "string" },
+          "nextChapterApiLink": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "previousChapterApiLink": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "numberOfVerses": { "type": "integer" },
+          "chapter": { "$ref": "#/components/schemas/CommentaryChapterData" }
+        },
+        "required": ["commentary", "book", "thisChapterLink", "numberOfVerses", "chapter"]
+      },
+      "CommentaryChapterData": {
+        "type": "object",
+        "properties": {
+          "number": { "type": "integer" },
+          "introduction": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ChapterVerse" }
+          }
+        },
+        "required": ["number", "content"]
       }
     }
   }
