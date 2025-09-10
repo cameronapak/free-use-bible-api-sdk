@@ -439,6 +439,88 @@
           }
         }
       }
+    },
+    "/api/c/{commentary}/books.json": {
+      "get": {
+        "operationId": "getBooksForCommentary",
+        "summary": "List Books in a Commentary",
+        "description": "Gets the list of books that are available for the given commentary.",
+        "parameters": [
+          {
+            "name": "commentary",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the commentary (e.g. adam-clarke)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of books for the commentary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentaryBooks"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Example response for adam-clarke commentary",
+                    "value": {
+                      "commentary": {
+                        "id": "adam-clarke",
+                        "name": "Adam Clarke Bible Commentary",
+                        "website": "https://en.wikipedia.org/wiki/Adam_Clarke",
+                        "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+                        "shortName": "Adam Clarke",
+                        "englishName": "Adam Clarke Bible Commentary",
+                        "language": "eng",
+                        "textDirection": "ltr",
+                        "availableFormats": [
+                          "json"
+                        ],
+                        "listOfBooksApiLink": "/api/c/adam-clarke/books.json",
+                        "numberOfBooks": 57,
+                        "totalNumberOfChapters": 854,
+                        "totalNumberOfVerses": 13318,
+                        "languageName": "English",
+                        "languageEnglishName": "English"
+                      },
+                      "books": [
+                        {
+                          "id": "GEN",
+                          "name": "Genesis",
+                          "commonName": "Genesis",
+                          "introduction": "Preface to the Book of Genesis...",
+                          "order": 1,
+                          "numberOfChapters": 50,
+                          "firstChapterApiLink": "/api/c/adam-clarke/GEN/1.json",
+                          "lastChapterApiLink": "/api/c/adam-clarke/GEN/50.json",
+                          "totalNumberOfVerses": 877
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -679,6 +761,32 @@
           "totalNumberOfVerses": { "type": "integer" }
         },
         "required": ["id", "name", "englishName", "website", "licenseUrl", "shortName", "language", "textDirection", "availableFormats", "listOfBooksApiLink", "numberOfBooks", "totalNumberOfChapters", "totalNumberOfVerses"]
+      },
+      "CommentaryBooks": {
+        "type": "object",
+        "properties": {
+          "commentary": { "$ref": "#/components/schemas/Commentary" },
+          "books": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CommentaryBook" }
+          }
+        },
+        "required": ["commentary", "books"]
+      },
+      "CommentaryBook": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "commonName": { "type": "string" },
+          "introduction": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "order": { "type": "integer" },
+          "firstChapterApiLink": { "type": "string" },
+          "lastChapterApiLink": { "type": "string" },
+          "numberOfChapters": { "type": "integer" },
+          "totalNumberOfVerses": { "type": "integer" }
+        },
+        "required": ["id", "name", "commonName", "order", "firstChapterApiLink", "lastChapterApiLink", "numberOfChapters", "totalNumberOfVerses"]
       }
     }
   }
