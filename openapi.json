@@ -379,6 +379,66 @@
           }
         }
       }
+    },
+    "/api/available_commentaries.json": {
+      "get": {
+        "operationId": "getAvailableCommentaries",
+        "summary": "Available Commentaries",
+        "description": "Gets the list of available Bible commentaries in the API.",
+        "responses": {
+          "200": {
+            "description": "List of available commentaries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableCommentaries"
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Example response",
+                    "value": {
+                      "commentaries": [
+                        {
+                          "id": "adam-clarke",
+                          "name": "Adam Clarke Bible Commentary",
+                          "website": "https://en.wikipedia.org/wiki/Adam_Clarke",
+                          "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+                          "shortName": "Adam Clarke",
+                          "englishName": "Adam Clarke Bible Commentary",
+                          "language": "eng",
+                          "textDirection": "ltr",
+                          "availableFormats": [
+                            "json"
+                          ],
+                          "listOfBooksApiLink": "/api/c/adam-clarke/books.json",
+                          "numberOfBooks": 57,
+                          "totalNumberOfChapters": 854,
+                          "totalNumberOfVerses": 13318,
+                          "languageName": "English",
+                          "languageEnglishName": "English"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -585,6 +645,40 @@
           "chapter": { "$ref": "#/components/schemas/ChapterData" }
         },
         "required": ["translation", "book", "thisChapterLink", "thisChapterAudioLinks", "numberOfVerses", "chapter"]
+      },
+      "AvailableCommentaries": {
+        "type": "object",
+        "properties": {
+          "commentaries": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Commentary" }
+          }
+        },
+        "required": ["commentaries"]
+      },
+      "Commentary": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "englishName": { "type": "string" },
+          "website": { "type": "string" },
+          "licenseUrl": { "type": "string" },
+          "shortName": { "type": "string" },
+          "language": { "type": "string" },
+          "languageName": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "languageEnglishName": { "oneOf": [ { "type": "string" }, { "type": "null" } ] },
+          "textDirection": { "type": "string", "enum": ["ltr", "rtl"] },
+          "availableFormats": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["json", "usfm"] }
+          },
+          "listOfBooksApiLink": { "type": "string" },
+          "numberOfBooks": { "type": "integer" },
+          "totalNumberOfChapters": { "type": "integer" },
+          "totalNumberOfVerses": { "type": "integer" }
+        },
+        "required": ["id", "name", "englishName", "website", "licenseUrl", "shortName", "language", "textDirection", "availableFormats", "listOfBooksApiLink", "numberOfBooks", "totalNumberOfChapters", "totalNumberOfVerses"]
       }
     }
   }
