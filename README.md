@@ -7,7 +7,7 @@ The SDK uses the standard Fetch API, has no runtime dependencies, and works in N
 ## Install
 
 ```sh
-npm install free-use-bible-api-sdk
+npm install free-use-bible-sdk
 ```
 
 ## Use
@@ -17,7 +17,7 @@ import {
   getAvailableTranslations,
   getSimpleTranslationBookChapter,
   getTranslationBookChapter,
-} from 'free-use-bible-api-sdk'
+} from 'free-use-bible-sdk'
 
 const available = await getAvailableTranslations()
 console.log(available.translations.length)
@@ -40,7 +40,7 @@ Requests use `https://bible.helloao.org` by default and throw parsed API errors 
 Pass a client when you need a different base URL, custom Fetch implementation, headers, or other request options.
 
 ```ts
-import { createClient, getTranslationBookChapter } from 'free-use-bible-api-sdk'
+import { createClient, getTranslationBookChapter } from 'free-use-bible-sdk'
 
 const client = createClient({
   baseUrl: 'https://bible.helloao.org',
@@ -54,7 +54,7 @@ const chapter = await getTranslationBookChapter({
 })
 ```
 
-Every endpoint function and response type is exported from the package root. The normalized OpenAPI document is also available as `free-use-bible-api-sdk/openapi.json`.
+Every endpoint function and response type is exported from the package root. The normalized OpenAPI document is also available as `free-use-bible-sdk/openapi.json`.
 
 ## Content licenses
 
@@ -87,14 +87,13 @@ bun run changeset
 
 After a change reaches `main`, the Release workflow creates or updates a version PR. Merging that PR publishes to npm through Trusted Publishing, pushes the Git tag, and creates the GitHub Release. Do not add a package script named `publish`; it conflicts with npm's publish lifecycle.
 
-### One-time npm bootstrap
+### One-time trusted publisher setup
 
-npm requires a package to exist before Trusted Publishing can be configured. After this modernization PR reaches `main`:
+Before merging the first Changesets version PR:
 
-1. Sign in to npm with 2FA and run `npm publish --access public` once to publish `1.15.0`.
-2. In the package's npm settings, add a GitHub Actions trusted publisher for user `cameronapak`, repository `free-use-bible-api-sdk`, and workflow `release.yml`. Allow `npm publish`; do not set an environment.
-3. In GitHub Actions settings, allow workflows to create and approve pull requests.
-4. Merge the Changesets version PR. It will publish `1.15.1` automatically with npm provenance.
+1. In the `free-use-bible-sdk` npm settings, add a GitHub Actions trusted publisher for user `cameronapak`, repository `free-use-bible-api-sdk`, and workflow `release.yml`. Allow `npm publish`; do not set an environment.
+2. In GitHub Actions settings, allow workflows to create and approve pull requests.
+3. Merge the Changesets version PR. It will publish the breaking SDK redesign as `2.0.0` with npm provenance.
 
 The release workflow intentionally uses no npm token or `NODE_AUTH_TOKEN`.
 

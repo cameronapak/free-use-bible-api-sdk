@@ -1,6 +1,6 @@
 {
-  "name": "free-use-bible-api-sdk",
-  "version": "1.15.0",
+  "name": "free-use-bible-sdk",
+  "version": "1.0.1",
   "description": "Type-safe TypeScript SDK for the Free Use Bible API",
   "keywords": [
     "bible",

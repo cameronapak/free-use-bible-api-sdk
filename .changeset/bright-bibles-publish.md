@@ -1,5 +1,5 @@
 ---
-"free-use-bible-api-sdk": patch
+"free-use-bible-sdk": major
 ---
 
-Automate package versioning and npm publishing with Changesets and GitHub trusted publishing.
+Replace the legacy `FreeUseBibleSDK` class with a generated function-based SDK covering the complete v1.15 API. Calls now use exported endpoint functions with typed options, such as `getTranslationBookChapter({ path: { translation, book, chapter } })`.
