@@ -10,6 +10,7 @@ Guidance for agents working on the generated TypeScript SDK and OpenAPI specific
 - Sync production spec: `bun run sync:spec`
 - Regenerate SDK: `bun run generate`
 - Build docs: `bun run build:docs` (writes `dist/redoc-static.html`)
+- Add release metadata: `bun run changeset`
 
 ## Architecture overview
 - `openapi.json` is a normalized snapshot of the production OpenAPI 3.1 specification.
@@ -35,11 +36,13 @@ Guidance for agents working on the generated TypeScript SDK and OpenAPI specific
 - For API updates: run `bun run sync:spec`, review the diff, update normalization when upstream metadata intentionally changes, then run `bun run generate`.
 - Run `bun run check` before completion. Run `bun run test:contract` when network access is available.
 - `bun run check:spec` and `bun run check:generated` detect drift without changing tracked files.
+- Publishable changes require a Changeset. Never add a `publish` package script; the GitHub release workflow owns publishing.
 
 ## Deployment
 - `bun run build` emits the publishable package to `dist`.
 - `bun run build:docs` emits static documentation to `dist/redoc-static.html`.
 - GitHub Actions runs offline package checks separately from production drift and contract checks.
+- Changesets creates version PRs and publishes merged versions to npm through GitHub OIDC.
 
 ## Integrations
 - API: https://bible.helloao.org

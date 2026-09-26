@@ -77,4 +77,25 @@ bun run test:contract
 - `bun run build:docs` writes Redoc HTML to `dist/redoc-static.html`.
 - `bun run test:contract` checks representative production responses. It requires network access.
 
+## Release
+
+Add a Changeset for every publishable change:
+
+```sh
+bun run changeset
+```
+
+After a change reaches `main`, the Release workflow creates or updates a version PR. Merging that PR publishes to npm through Trusted Publishing, pushes the Git tag, and creates the GitHub Release. Do not add a package script named `publish`; it conflicts with npm's publish lifecycle.
+
+### One-time npm bootstrap
+
+npm requires a package to exist before Trusted Publishing can be configured. After this modernization PR reaches `main`:
+
+1. Sign in to npm with 2FA and run `npm publish --access public` once to publish `1.15.0`.
+2. In the package's npm settings, add a GitHub Actions trusted publisher for user `cameronapak`, repository `free-use-bible-api-sdk`, and workflow `release.yml`. Allow `npm publish`; do not set an environment.
+3. In GitHub Actions settings, allow workflows to create and approve pull requests.
+4. Merge the Changesets version PR. It will publish `1.15.1` automatically with npm provenance.
+
+The release workflow intentionally uses no npm token or `NODE_AUTH_TOKEN`.
+
 See [Agents.md](Agents.md) for repository guidance.

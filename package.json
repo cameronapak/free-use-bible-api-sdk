@@ -36,6 +36,9 @@
     },
     "./openapi.json": "./openapi.json"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "sync:spec": "bun scripts/sync-openapi.ts",
     "check:spec": "bun scripts/sync-openapi.ts --check",
@@ -47,6 +50,8 @@
     "test:contract": "bun test ./tests/contract.test.ts",
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "build:docs": "redocly build-docs openapi.json --output dist/redoc-static.html",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
     "check:package": "publint && attw --pack . --profile esm-only",
     "check:source": "bun run lint && bun run typecheck && bun run test && bun run check:generated && bun run build",
     "check": "bun run check:source && bun run check:package",
@@ -54,6 +59,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
+    "@changesets/cli": "3.0.3",
     "@hey-api/openapi-ts": "0.99.0",
     "@redocly/cli": "2.54.3",
     "@types/bun": "1.4.2",
