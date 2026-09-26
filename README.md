@@ -1,101 +1,28 @@
-# Free Use Bible API SDK
+# Deprecated Free Use Bible API SDK
 
-A generated, type-safe TypeScript client for the [Free Use Bible API](https://bible.helloao.org). It covers all 24 operations in the production OpenAPI specification, including translations, simplified chapters, word annotations, audio timings, commentaries, cross references, and entity datasets.
+This repository and the previously published [`free-use-bible-sdk`](https://www.npmjs.com/package/free-use-bible-sdk) package are deprecated. This repository will not be published or maintained as a separate SDK.
 
-The SDK uses the standard Fetch API, has no runtime dependencies, and works in Node.js 22.18 or newer, Bun, and modern browsers.
+Use HelloAO's official TypeScript and JavaScript client instead:
 
-## Install
+- [Source code](https://github.com/HelloAOLab/bible-api/tree/main/packages/free-use-bible-api)
+- [Official documentation](https://bible.helloao.org/docs/sdks/javascript.html)
+- [npm package: `free-use-bible-api`](https://www.npmjs.com/package/free-use-bible-api)
 
 ```sh
-npm install free-use-bible-api-sdk
+npm install free-use-bible-api
 ```
-
-## Use
 
 ```ts
-import {
-  getAvailableTranslations,
-  getSimpleTranslationBookChapter,
-  getTranslationBookChapter,
-} from 'free-use-bible-api-sdk'
+import { FreeUseBibleApi } from 'free-use-bible-api'
 
-const available = await getAvailableTranslations()
-console.log(available.translations.length)
-
-const chapter = await getTranslationBookChapter({
-  path: { translation: 'BSB', book: 'ROM', chapter: 8 },
-})
-console.log(chapter.chapter.content)
-
-const simple = await getSimpleTranslationBookChapter({
-  path: { translation: 'BSB', book: 'ROM', chapter: 8 },
-})
-console.log(simple.chapter.content)
+const api = new FreeUseBibleApi()
+const chapter = await api.getTranslationBookChapter('BSB', 'ROM', 8)
 ```
 
-Requests use `https://bible.helloao.org` by default and throw parsed API errors for unsuccessful responses.
+## Migration note
 
-### Configure a client
+The official package is not a drop-in replacement for `free-use-bible-sdk` or this repository's generated client. It uses a `FreeUseBibleApi` class instead of the legacy `FreeUseBibleSDK` class or generated endpoint functions. It also has different caching and error behavior.
 
-Pass a client when you need a different base URL, custom Fetch implementation, headers, or other request options.
+As of `free-use-bible-api` 0.4.0, compare the official client's current API before migrating code that depends on custom Fetch implementations, custom headers, direct audio-timing methods, commentary response types, entity-dataset navigation types, or the packaged OpenAPI document. Use the Free Use Bible API directly when the official client does not yet cover a required operation.
 
-```ts
-import { createClient, getTranslationBookChapter } from 'free-use-bible-api-sdk'
-
-const client = createClient({
-  baseUrl: 'https://bible.helloao.org',
-  headers: { 'User-Agent': 'my-app/1.0' },
-  throwOnError: true,
-})
-
-const chapter = await getTranslationBookChapter({
-  client,
-  path: { translation: 'BSB', book: 'GEN', chapter: 1 },
-})
-```
-
-Every endpoint function and response type is exported from the package root. The normalized OpenAPI document is also available as `free-use-bible-api-sdk/openapi.json`.
-
-## Content licenses
-
-The MIT license covers this SDK and its OpenAPI document. It does not replace the license for any Bible translation, commentary, or dataset returned by the API. Read each resource's `licenseUrl`, `license`, `licenseNotes`, and `licenseNotice` fields before using or redistributing its content.
-
-## Maintain
-
-The production API specification is the source of truth. The sync step downloads it and applies a small deterministic normalization: the current API release version, package license metadata, explicit public security, and operation summaries required by strict linting.
-
-```sh
-bun install
-bun run sync:spec
-bun run generate
-bun run check
-bun run test:contract
-```
-
-- `bun run check:spec` detects production specification drift.
-- `bun run check:generated` detects stale generated code.
-- `bun run build:docs` writes Redoc HTML to `dist/redoc-static.html`.
-- `bun run test:contract` checks representative production responses. It requires network access.
-
-## Release
-
-Add a Changeset for every publishable change:
-
-```sh
-bun run changeset
-```
-
-After a change reaches `main`, the Release workflow creates or updates a version PR. Merging that PR publishes to npm through Trusted Publishing, pushes the Git tag, and creates the GitHub Release. Do not add a package script named `publish`; it conflicts with npm's publish lifecycle.
-
-### One-time npm bootstrap
-
-npm requires a package to exist before Trusted Publishing can be configured. After this modernization PR reaches `main`:
-
-1. Sign in to npm with 2FA and run `npm publish --access public` once to publish `1.15.0`.
-2. In the package's npm settings, add a GitHub Actions trusted publisher for user `cameronapak`, repository `free-use-bible-api-sdk`, and workflow `release.yml`. Allow `npm publish`; do not set an environment.
-3. In GitHub Actions settings, allow workflows to create and approve pull requests.
-4. Merge the Changesets version PR. It will publish `1.15.1` automatically with npm provenance.
-
-The release workflow intentionally uses no npm token or `NODE_AUTH_TOKEN`.
-
-See [Agents.md](Agents.md) for repository guidance.
+Content returned by the API has its own licensing terms. Review each resource's license fields before using or redistributing it.
