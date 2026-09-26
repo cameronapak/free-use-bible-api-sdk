@@ -1,57 +1,56 @@
-# Agents.md - OpenAPI Bible API Spec
+# Agents.md - Free Use Bible API SDK
 
 ## What this is
-Guidance for Agents when working with this OpenAPI specification repository for the Free Use Bible API. Keep answers concise, verify commands, and prefer links to source over duplication. See [`README`](README.md) for overview.
+Guidance for agents working on the generated TypeScript SDK and OpenAPI specification for the Free Use Bible API. Keep answers concise, verify commands, and prefer links to source over duplication. See [`README`](README.md) for the public overview.
 
 ## Quickstart commands
 - Install: `bun install`
-- Lint: `bun run lint`
-- Build: `bun run build-docs` (generates `redoc-static.html`)
-- Start/Preview: Open `redoc-static.html` in browser after build; no dev server.
-- Test: `bun run lint` for validation; no unit tests.
-- Lint/Format/Types: `bun run lint`; no format/typecheck scripts (use external tools if needed).
-- Data export/sync: Not applicable (no dynamic data).
+- Full offline verification: `bun run check`
+- Live API contracts: `bun run test:contract`
+- Sync production spec: `bun run sync:spec`
+- Regenerate SDK: `bun run generate`
+- Build docs: `bun run build:docs` (writes `dist/redoc-static.html`)
+- Add release metadata: `bun run changeset`
 
 ## Architecture overview
-- Framework: OpenAPI 3.1.0 specification defining Bible API endpoints.
-- Rendering: Static JSON; no SSG/SSR (use for API docs or code generation).
-- Data flow:
-  - Client requests to hosted API (https://bible.helloao.org).
-  - Spec defines paths for translations, books, chapters with schemas.
-  - Responses include Bible content, footnotes, audio links.
-- Key modules: [`openapi.json`](openapi.json) (main spec), [`schemas.json`](schemas.json) (shared schemas), endpoint files (*.json).
+- `openapi.json` is a normalized snapshot of the production OpenAPI 3.1 specification.
+- `scripts/sync-openapi.ts` downloads production and applies reviewed metadata normalization.
+- Hey API generates the dependency-free Fetch client under `src/generated`.
+- `scripts/patch-generated.ts` applies strict, count-checked compatibility fixes after generation.
+- `src/index.ts` is the package entry point.
 
 ## Environment and configuration
-- Runtime: Bun (Node compatible), package manager: Bun.
-- Env files: No environment variables needed.
-- Required vars: None.
-- See README for API server details.
+- Tooling and package manager: Bun.
+- Published runtime: ESM on Node.js 22.18+, Bun, or modern browsers.
+- No environment variables or runtime dependencies are required.
 
 ## Project structure (high level)
-- openapi.json: Main OpenAPI spec with paths and components ref.
-- schemas.json: Shared JSON schemas for API objects (e.g., Translation, ChapterData).
-- available-translations.json, list-books-translation.json, get-chapter-translation.json: Endpoint definitions (where to edit paths/parameters/responses).
-- package.json, bun.lock, tsconfig.json: Dependencies and config.
-- README.md: Project overview and file descriptions.
+- `openapi.json`: normalized production contract.
+- `openapi-ts.config.ts`: generator configuration.
+- `src/generated`: committed generated SDK and types.
+- `scripts`: spec synchronization, generated patches, and drift checking.
+- `tests`: offline transport tests, compile-time contracts, and live API contracts.
 
 ## Development workflow
-- Typical loop: `bun install` → edit JSON files → `bun run lint` → `bun run build-docs` → commit → PR.
-- Common tasks:
-  - Validate spec: `bun run lint openapi.json`.
-  - Preview docs: Run `bun run build-docs` and open `redoc-static.html`.
-- Troubleshooting: Fix lint warnings (e.g., schema conformance); check examples against schemas; use [OpenAPI docs](https://spec.openapis.org/oas/latest.html).
+- Do not hand-edit `openapi.json` or `src/generated`.
+- For API updates: run `bun run sync:spec`, review the diff, update normalization when upstream metadata intentionally changes, then run `bun run generate`.
+- Run `bun run check` before completion. Run `bun run test:contract` when network access is available.
+- `bun run check:spec` and `bun run check:generated` detect drift without changing tracked files.
+- Publishable changes require a Changeset. Never add a `publish` package script; the GitHub release workflow owns publishing.
 
 ## Deployment
-- Hosting: Static file host (e.g., GitHub Pages, Vercel) for spec/docs; API hosted at bible.helloao.org.
-- Build command: `bun run build-docs`; output: `redoc-static.html`.
-- CI: No workflows; add GitHub Actions for lint on PR if needed.
-- Post-deploy: Update API server if generating from spec.
+- `bun run build` emits the publishable package to `dist`.
+- `bun run build:docs` emits static documentation to `dist/redoc-static.html`.
+- GitHub Actions runs offline package checks separately from production drift and contract checks.
+- Changesets creates version PRs and publishes merged versions to npm through GitHub OIDC.
 
 ## Integrations
-- Bible API: Free, no-auth endpoints at https://bible.helloao.org/api (e.g., /available_translations, /{translation}/{book}/{chapter}); no rate limits noted; see [docs](https://bible.helloao.org/docs/reference/) for usage.
-- Others: MIT licensed; integrate with tools like Swagger UI for rendering; audio links to openbible.com.
+- API: https://bible.helloao.org
+- Reference: https://bible.helloao.org/docs/reference/
+- Content licenses vary by translation, commentary, and dataset. Do not treat the SDK's MIT license as a content license.
 
 ## References
-- Source files: [`openapi.json`](openapi.json), [`schemas.json`](schemas.json).
-- Dashboards: [Bible API](https://bible.helloao.org/docs/reference/).
-- Read more: [`README`](README.md), [OpenAPI Spec](https://spec.openapis.org/oas/latest.html), [Redocly](https://redocly.com/docs/cli/).
+- [`README`](README.md)
+- [`openapi.json`](openapi.json)
+- [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Redocly CLI](https://redocly.com/docs/cli/)
