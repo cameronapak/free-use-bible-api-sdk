@@ -1,23 +1,67 @@
 {
-  "name": "openapi-bible-api-stainless",
-  "module": "index.ts",
+  "name": "free-use-bible-api-sdk",
+  "version": "1.15.0",
+  "description": "Type-safe TypeScript SDK for the Free Use Bible API",
+  "keywords": [
+    "bible",
+    "bible-api",
+    "openapi",
+    "sdk",
+    "typescript"
+  ],
+  "homepage": "https://github.com/cameronapak/free-use-bible-api-sdk#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cameronapak/free-use-bible-api-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cameronapak/free-use-bible-api-sdk/issues"
+  },
+  "license": "MIT",
   "type": "module",
-  "private": true,
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "openapi.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./openapi.json": "./openapi.json"
+  },
   "scripts": {
+    "sync:spec": "bun scripts/sync-openapi.ts",
+    "check:spec": "bun scripts/sync-openapi.ts --check",
+    "generate": "openapi-ts && bun scripts/patch-generated.ts",
+    "check:generated": "bun scripts/check-generated.ts",
     "lint": "redocly lint openapi.json",
-    "build-docs": "redocly build-docs openapi.json",
-    "pre:open-docs": "build-docs",
-    "open-docs": "open redoc-static.html",
-    "gen-sdk": "apigen-ts ./openapi.json ./api-client.ts",
-    "gen-sdk-v2": "openapi-zod-client \"./openapi.json\" -o \"./api-client-v2.ts\" --export-schemas=true --export-types=true --base-url=https://bible.helloao.org --strict-objects"
+    "typecheck": "tsc --noEmit",
+    "test": "bun test ./tests/sdk.test.ts",
+    "test:contract": "bun test ./tests/contract.test.ts",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "build:docs": "redocly build-docs openapi.json --output dist/redoc-static.html",
+    "check:package": "publint && attw --pack . --profile esm-only",
+    "check:source": "bun run lint && bun run typecheck && bun run test && bun run check:generated && bun run build",
+    "check": "bun run check:source && bun run check:package",
+    "prepack": "bun run check:source"
   },
   "devDependencies": {
-    "@redocly/cli": "^2.0.8",
-    "@types/bun": "latest",
-    "apigen-ts": "^1.2.1",
-    "openapi-zod-client": "^1.18.3"
+    "@arethetypeswrong/cli": "0.18.5",
+    "@hey-api/openapi-ts": "0.99.0",
+    "@redocly/cli": "2.54.3",
+    "@types/bun": "1.4.2",
+    "publint": "0.3.24",
+    "typescript": "5.9.3"
   },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "packageManager": "bun@1.3.10"
 }
